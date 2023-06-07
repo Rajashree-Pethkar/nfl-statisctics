@@ -1,2 +1,2 @@
 /*    /index.html   200
-/api    https://api.sportsdata.io   200
+/api/*   https://api.sportsdata.io/:splat  200
