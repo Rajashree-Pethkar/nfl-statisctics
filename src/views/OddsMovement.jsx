@@ -79,6 +79,7 @@ export default function GameOddsLineMovement() {
       const average =
         values.reduce((sum, value) => sum + value, 0) / values.length;
       averagesHomeTeam[date] = average;
+      labels.push(date);
     });
 
     Object.keys(averagesAwayPoints).forEach((date) => {
@@ -87,8 +88,6 @@ export default function GameOddsLineMovement() {
         values.reduce((sum, value) => sum + value, 0) / values.length;
       averagesAwayTeam[date] = average;
     });
-
-    labels = Object.keys(averagesHomeTeam);
   };
 
   const options = {
