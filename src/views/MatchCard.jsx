@@ -85,7 +85,8 @@ export default function MatchCard({ week, teamData, gameData, seasonData, weekDa
   };
 
   return (
-    <div id="match-card"
+    <div
+      id="match-card"
       onClick={() => handleClick(homeTeam, awayTeam, seasonData)}
       className="card col my-3"
       style={{ width: "18rem", borderWidth: "5px" }}>
@@ -109,13 +110,13 @@ export default function MatchCard({ week, teamData, gameData, seasonData, weekDa
       <div className="row card-body">
         <h6
           className="card-text text-justify-left col"
-          style={{ textAlign: "center" }}>
+          style={{ textAlign: "center", color: "white" }}>
           {homeTeam}
         </h6>
         <div className="mx-5 col"></div>
         <h6
           className="card-text text-justify-right col"
-          style={{ textAlign: "center" }}>
+          style={{ textAlign: "center", color: "white" }}>
           {awayTeam}
         </h6>
       </div>
