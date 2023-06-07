@@ -6,7 +6,7 @@ import { loadEnv } from "vite";
 const env = loadEnv("development", process.cwd(), "");
 
 export default defineConfig({
-  base: "/nfl-satistics/",
+  // base: "/nfl-satistics/",
   plugins: [react()],
   server: {
     proxy: {
