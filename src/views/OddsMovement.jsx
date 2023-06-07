@@ -85,39 +85,53 @@ export default function GameOddsLineMovement() {
     });
   };
 
-  const options = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top",
+  //Added in useEffect because the chart was not working on prod deployment
+  useEffect(() => {
+    const options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: "top",
+        },
+        title: {
+          display: false,
+        },
       },
-      title: {
-        display: false,
-      },
-    },
-  };
+    };
 
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        label: "Home Point Spread",
-        data: averagesHomeTeam,
-        borderColor: "white",
-        backgroundColor: "red",
-      },
-      {
-        label: "Away Point Spread",
-        data: averagesAwayTeam,
-        borderColor: "white",
-        backgroundColor: "blue",
-      },
-    ],
-  };
+    const data = {
+      labels: labels,
+      datasets: [
+        {
+          label: "Home Point Spread",
+          data: averagesHomeTeam,
+          borderColor: "white",
+          backgroundColor: "red",
+        },
+        {
+          label: "Away Point Spread",
+          data: averagesAwayTeam,
+          borderColor: "white",
+          backgroundColor: "blue",
+        },
+      ],
+    };
 
-  console.log(data);
-  console.log(options);
-  console.log(labels);
+    //Added the logs for testing as there were issues with chart
+    console.log(data);
+    console.log(options);
+    console.log(labels);
+
+   const chartPregameOdds = new ChartJS(document.getElementById("pregameodds-chart"), {
+     type: "line",
+     data: data,
+     options: options,
+   });
+
+   return () => {
+     chartPregameOdds.destroy(); // Destroy the chart instance when component unmounts
+   };
+  }, [labels, averagesHomeTeam, averagesAwayTeam]);
 
   return (
     <div className="w-75 mx-auto mt-5">
@@ -125,7 +139,8 @@ export default function GameOddsLineMovement() {
         <h1>Odds Movement</h1>
       </div>
       <div className="mt-4">
-        <Line id="pregameodds-chart" data={data} options={options} />
+        {/* <Line id="pregameodds-chart" data={data} options={options} /> */}
+        <canvas id="pregameodds-chart"></canvas>
       </div>
       <div className="mt-4 text-center">
         <button
