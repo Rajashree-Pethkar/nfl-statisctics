@@ -8,7 +8,7 @@ const headers = {
 
 async function getWeekInfo(season, week) {
   try {
-    const weekInfoUrl = nflUrl.concat(season).concat("REG/").concat(week);
+    const weekInfoUrl = nflUrl.concat(season).concat('REG/').concat(week);
     const response = await axios.get(weekInfoUrl, { headers });
     return response.data;
   } catch (err) {

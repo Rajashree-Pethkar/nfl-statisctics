@@ -8,7 +8,7 @@ const headers = {
 
 async function getTeamInfo(week) {
   try {
-    const response = await axios.get(nflUrl, { headers });
+    const response = await axios.get(nflUrl, {headers});
     return response.data;
   } catch (err) {
     console.error(err);

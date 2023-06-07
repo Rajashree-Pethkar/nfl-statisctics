@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import getOddsStats from "../utils/oddsStats";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,66 +23,117 @@ ChartJS.register(
 );
 
 export default function GameOddsLineMovement() {
-    const location = useLocation();
-    const weekTeamData = location.state?.weekTeamData || [];
+  const location = useLocation();
+  const homePointSpreadData = location.state?.homePointSpreadValues || [];
+  const awayPointSpreadData = location.state?.awayPointSpreadValues || [];
 
-    const [scoreHomeTeamData, setScoreHomeTeamData] = useState([]);
-    let scoreId = weekTeamData.ScoreID;
+  let chartStatus = ChartJS.getChart("pregameodds-chart");
+  if (chartStatus != undefined) {
+    chartStatus.destroy();
+  }
 
-    const [homePointSpreadData, setHomePointSpreadData] = useState([]);
-    const [awayPointSpreadData, setAwayPointSpreadData] = useState([]);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        getOddsStats(scoreId).then((homeTeamScores) => {
-        setScoreHomeTeamData(homeTeamScores);
+  const goBack = () => {
+    navigate(-1);
+  };
 
-        const homePointSpreadValues = homeTeamScores[0].PregameOdds.map(
-            (score) => score.HomePointSpread
-        );
-        const awayPointSpreadValues = homeTeamScores[0].PregameOdds.map(
-            (score) => score.AwayPointSpread
-        );
+  useEffect(() => {
+    if (homePointSpreadData.length > 0 && awayPointSpreadData.length > 0) {
+      calculateDataAverageForChart();
+    }
+  }, [homePointSpreadData, awayPointSpreadData]);
 
-        setHomePointSpreadData(homePointSpreadValues);
-        setAwayPointSpreadData(awayPointSpreadValues);
-        });
-    }, [scoreId]);
+  // Group data by date
+  const averagesHomePoints = {};
+  const averagesAwayPoints = {};
+  const averagesHomeTeam = {};
+  const averagesAwayTeam = {};
 
-    const options = {
-        responsive: true,
-        plugins: {
-        legend: {
-            position: "top",
-        },
-        title: {
-            display: true,
-            text: "Odds Movement",
-        },
-        },
-    };
+  const calculateDataAverageForChart = () => {
+    homePointSpreadData.forEach((item) => {
+      const { HomePointSpread, Updated } = item;
+      const dateTime = new Date(Updated);
+      const updatedDate = dateTime.toLocaleDateString();
+      if (averagesHomePoints[updatedDate]) {
+        averagesHomePoints[updatedDate].push(HomePointSpread);
+      } else {
+        averagesHomePoints[updatedDate] = [HomePointSpread];
+      }
+    });
+    awayPointSpreadData.forEach((item) => {
+      const { AwayPointSpread, Updated } = item;
+      const dateTime = new Date(Updated);
+      const updatedDate = dateTime.toLocaleDateString();
+      if (averagesAwayPoints[updatedDate]) {
+        averagesAwayPoints[updatedDate].push(AwayPointSpread);
+      } else {
+        averagesAwayPoints[updatedDate] = [AwayPointSpread];
+      }
+    });
 
-    const data = {
-        datasets: [
-        {
-            label: "Home Point Spread",
-            data: homePointSpreadData,
-            borderColor: "white",
-            backgroundColor: "red",
-        },
-        {
-            label: "Away Point Spread",
-            data: awayPointSpreadData,
-            borderColor: "white",
-            backgroundColor: "blue",
-        },
-        ],
-    };
+    // Calculate the average for each day
+    Object.keys(averagesHomePoints).forEach((date) => {
+      const values = averagesHomePoints[date];
+      const average =
+        values.reduce((sum, value) => sum + value, 0) / values.length;
+      averagesHomeTeam[date] = average;
+    });
 
-    return (
-        <div className="text-center">
-        <div>
-            <Line data={data} options={options} />
-        </div>
-        </div>
-    );
+    Object.keys(averagesAwayPoints).forEach((date) => {
+      const values = averagesAwayPoints[date];
+      const average =
+        values.reduce((sum, value) => sum + value, 0) / values.length;
+      averagesAwayTeam[date] = average;
+    });
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+      },
+      title: {
+        display: false,
+      },
+    },
+  };
+
+  const data = {
+    labels: Object.keys(averagesHomePoints),
+    datasets: [
+      {
+        label: "Home Point Spread",
+        data: averagesHomeTeam,
+        borderColor: "white",
+        backgroundColor: "red",
+      },
+      {
+        label: "Away Point Spread",
+        data: averagesAwayTeam,
+        borderColor: "white",
+        backgroundColor: "blue",
+      },
+    ],
+  };
+
+  return (
+    <div className="w-75 mx-auto mt-5">
+      <div>
+        <h1>Odds Movement</h1>
+      </div>
+      <div className="mt-4">
+        <Line id="pregameodds-chart" data={data} options={options} />
+      </div>
+      <div className="mt-4 text-center">
+        <button
+          type="button"
+          className="text-light btn btn-secondary"
+          onClick={goBack}>
+          Season stats
+        </button>
+      </div>
+    </div>
+  );
 }

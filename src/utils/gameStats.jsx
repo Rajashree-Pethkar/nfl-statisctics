@@ -8,9 +8,7 @@ const headers = {
 
 async function getTeamGameStats(week) {
   try {
-    const response = await axios.get(nflUrl.concat(week), {
-      headers,
-    });
+    const response = await axios.get(nflUrl.concat(week), { headers });
     return response.data;
   } catch (err) {
     console.error(err);
