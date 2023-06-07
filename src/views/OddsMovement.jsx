@@ -27,11 +27,6 @@ export default function GameOddsLineMovement() {
   const homePointSpreadData = location.state?.homePointSpreadValues || [];
   const awayPointSpreadData = location.state?.awayPointSpreadValues || [];
 
-  let chartStatus = ChartJS.getChart("pregameodds-chart");
-  if (chartStatus != undefined) {
-    chartStatus.destroy();
-  }
-
   const navigate = useNavigate();
 
   const goBack = () => {
