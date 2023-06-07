@@ -101,7 +101,7 @@ export default function GameOddsLineMovement() {
   };
 
   const data = {
-    labels: Object.keys(averagesHomePoints),
+    labels: Object.keys(averagesHomeTeam),
     datasets: [
       {
         label: "Home Point Spread",
@@ -117,6 +117,9 @@ export default function GameOddsLineMovement() {
       },
     ],
   };
+
+  console.log(data);
+  console.log(options);
 
   return (
     <div className="w-75 mx-auto mt-5">
