@@ -120,6 +120,7 @@ export default function GameOddsLineMovement() {
 
   console.log(data);
   console.log(options);
+  console.log(Object.keys(averagesHomeTeam));
 
   return (
     <div className="w-75 mx-auto mt-5">
