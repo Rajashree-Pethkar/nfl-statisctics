@@ -8,10 +8,7 @@ const headers = {
 
 async function getSeasonStats(week) {
   try {
-    const api = axios.create({
-      baseURL: import.meta.env.VITE_NFL_URL,
-    });
-    const response = await api.get(nflUrl, { headers });
+    const response = await axios.get(nflUrl, { headers });
     return response.data;
   } catch (err) {
     console.error(err);

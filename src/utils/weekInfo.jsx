@@ -8,11 +8,8 @@ const headers = {
 
 async function getWeekInfo(season, week) {
   try {
-    const api = axios.create({
-      baseURL: import.meta.env.VITE_NFL_URL,
-    });
     const weekInfoUrl = nflUrl.concat(season).concat("REG/").concat(week);
-    const response = await api.get(weekInfoUrl, { headers });
+    const response = await axios.get(weekInfoUrl, { headers });
     return response.data;
   } catch (err) {
     console.error(err);

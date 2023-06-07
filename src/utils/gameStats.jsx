@@ -8,10 +8,7 @@ const headers = {
 
 async function getTeamGameStats(week) {
   try {
-    const api = axios.create({
-      baseURL: import.meta.env.VITE_NFL_URL,
-    });
-    const response = await api.get(nflUrl.concat(week), {
+    const response = await axios.get(nflUrl.concat(week), {
       headers,
     });
     return response.data;
