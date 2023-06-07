@@ -49,6 +49,7 @@ export default function GameOddsLineMovement() {
   const averagesAwayPoints = {};
   const averagesHomeTeam = {};
   const averagesAwayTeam = {};
+  const labels = [];
 
   const calculateDataAverageForChart = () => {
     homePointSpreadData.forEach((item) => {
@@ -86,6 +87,8 @@ export default function GameOddsLineMovement() {
         values.reduce((sum, value) => sum + value, 0) / values.length;
       averagesAwayTeam[date] = average;
     });
+
+    labels = Object.keys(averagesHomeTeam);
   };
 
   const options = {
@@ -101,7 +104,7 @@ export default function GameOddsLineMovement() {
   };
 
   const data = {
-    labels: Object.keys(averagesHomeTeam),
+    labels: labels,
     datasets: [
       {
         label: "Home Point Spread",
@@ -120,7 +123,7 @@ export default function GameOddsLineMovement() {
 
   console.log(data);
   console.log(options);
-  console.log(Object.keys(averagesHomeTeam));
+  console.log(labels);
 
   return (
     <div className="w-75 mx-auto mt-5">
