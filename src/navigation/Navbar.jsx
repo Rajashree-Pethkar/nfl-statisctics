@@ -7,7 +7,7 @@ import GameOddsLineMovement from "../views/OddsMovement";
 function Navbar() {
   return (
     <div>
-      <ul className="nav">
+      <ul className="nav border-bottom">
         <li className="nav-item">
           <Link to="/" className="nav-link active text-white">
             Home
