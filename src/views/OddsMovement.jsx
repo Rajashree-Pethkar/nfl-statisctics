@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   Chart as ChartJS,
@@ -26,6 +26,9 @@ export default function GameOddsLineMovement() {
   const location = useLocation();
   const homePointSpreadData = location.state?.homePointSpreadValues || [];
   const awayPointSpreadData = location.state?.awayPointSpreadValues || [];
+  const [preGameLabels, setPreGameLabels] = useState([]);
+  const [preGameHomeData, setPreGameHomeData] = useState(null);
+  const [preGameAwayData, setPreGameAwayData] = useState(null);
 
   const navigate = useNavigate();
 
@@ -44,9 +47,10 @@ export default function GameOddsLineMovement() {
   const averagesAwayPoints = {};
   const averagesHomeTeam = {};
   const averagesAwayTeam = {};
-  const labels = [];
+  let labels = [];
 
   const calculateDataAverageForChart = () => {
+    labels = [];
     homePointSpreadData.forEach((item) => {
       const { HomePointSpread, Updated } = item;
       const dateTime = new Date(Updated);
@@ -83,6 +87,10 @@ export default function GameOddsLineMovement() {
         values.reduce((sum, value) => sum + value, 0) / values.length;
       averagesAwayTeam[date] = average;
     });
+
+    setPreGameHomeData(averagesHomeTeam);
+    setPreGameAwayData(averagesAwayTeam);
+    setPreGameLabels(labels);
   };
 
   const options = {
@@ -98,17 +106,17 @@ export default function GameOddsLineMovement() {
   };
 
   const data = {
-    labels: labels,
+    labels: preGameLabels,
     datasets: [
       {
         label: "Home Point Spread",
-        data: averagesHomeTeam,
+        data: preGameHomeData,
         borderColor: "white",
         backgroundColor: "red",
       },
       {
         label: "Away Point Spread",
-        data: averagesAwayTeam,
+        data: preGameAwayData,
         borderColor: "white",
         backgroundColor: "blue",
       },
